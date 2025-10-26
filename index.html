@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Workout Split</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0a192f 0%, #112240 50%, #1a2332 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            padding: 40px 20px;
+            color: #fff;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #00d4ff 0%, #00a8cc 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from {
+                filter: drop-shadow(0 0 10px rgba(0, 212, 255, 0.5));
+            }
+            to {
+                filter: drop-shadow(0 0 20px rgba(0, 168, 204, 0.8));
+            }
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #a0a0b0;
+            margin-bottom: 50px;
+            font-size: 1.1rem;
+            letter-spacing: 1px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 30px;
+            margin-bottom: 50px;
+        }
+
+        .day-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .day-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #00d4ff 0%, #00a8cc 100%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .day-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 212, 255, 0.3);
+            border-color: rgba(0, 212, 255, 0.5);
+        }
+
+        .day-card:hover::before {
+            opacity: 1;
+        }
+
+        .day-title {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            color: #00d4ff;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .day-type {
+            font-size: 0.9rem;
+            color: #888;
+            margin-bottom: 25px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .exercise-list {
+            list-style: none;
+        }
+
+        .exercise-item {
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            color: #e0e0e0;
+            font-size: 1rem;
+            transition: all 0.2s ease;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .exercise-item::before {
+            content: '▸';
+            position: absolute;
+            left: 0;
+            color: #00d4ff;
+            transition: transform 0.2s ease;
+        }
+
+        .exercise-item:hover {
+            color: #fff;
+            padding-left: 25px;
+        }
+
+        .exercise-item:hover::before {
+            transform: translateX(3px);
+        }
+
+        .exercise-item:last-child {
+            border-bottom: none;
+        }
+
+        .extra-section {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 2px solid rgba(0, 212, 255, 0.3);
+        }
+
+        .extra-title {
+            font-size: 0.85rem;
+            color: #ffd700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .maintenance-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+        }
+
+        .maintenance-card {
+            background: rgba(255, 215, 0, 0.1);
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            border-radius: 15px;
+            padding: 25px;
+            transition: all 0.3s ease;
+        }
+
+        .maintenance-card:hover {
+            background: rgba(255, 215, 0, 0.15);
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(255, 215, 0, 0.2);
+        }
+
+        .maintenance-title {
+            font-size: 1.5rem;
+            color: #ffd700;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 60px;
+            padding: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .footer-title {
+            font-size: 1.2rem;
+            color: #00d4ff;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 25px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .social-link {
+            color: #a0a0b0;
+            text-decoration: none;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            padding: 8px 16px;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .social-link:hover {
+            color: #00d4ff;
+            background: rgba(0, 212, 255, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .tooltip {
+            position: relative;
+            cursor: help;
+        }
+
+        .tooltip-content {
+            visibility: hidden;
+            opacity: 0;
+            position: fixed;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.95);
+            color: #fff;
+            padding: 20px;
+            border-radius: 12px;
+            width: 320px;
+            max-width: calc(100vw - 40px);
+            font-size: 0.95rem;
+            line-height: 1.6;
+            z-index: 10000;
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+            pointer-events: none;
+            white-space: normal;
+        }
+
+        .tooltip-content::before {
+            display: none;
+        }
+
+        @media (hover: hover) and (pointer: fine) {
+            .tooltip:hover .tooltip-content {
+                visibility: visible;
+                opacity: 1;
+            }
+        }
+
+        @media (hover: none) or (pointer: coarse) {
+            .tooltip {
+                cursor: pointer;
+            }
+            
+            .tooltip.active .tooltip-content {
+                visibility: visible;
+                opacity: 1;
+            }
+        }
+
+        .tooltip-title {
+            color: #00d4ff;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+
+            .grid {
+                grid-template-columns: 1fr;
+            }
+
+            .day-card {
+                padding: 20px;
+            }
+
+            .tooltip-content {
+                width: 90vw;
+                max-width: 320px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <script>
+        // Handle touch devices (mobile)
+        document.addEventListener('DOMContentLoaded', function() {
+            const tooltips = document.querySelectorAll('.tooltip');
+            
+            tooltips.forEach(tooltip => {
+                tooltip.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    // Close all other tooltips
+                    tooltips.forEach(t => {
+                        if (t !== tooltip) {
+                            t.classList.remove('active');
+                        }
+                    });
+                    
+                    // Toggle current tooltip
+                    this.classList.toggle('active');
+                });
+            });
+            
+            // Close tooltip when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!e.target.closest('.tooltip')) {
+                    tooltips.forEach(t => t.classList.remove('active'));
+                }
+            });
+        });
+    </script>
+    <div class="container">
+        <h1>💪 Aami's Workout Split</h1>
+        <p class="subtitle">Your Complete Training Program</p>
+
+        <div class="grid">
+            <!-- PUSH DAY -->
+            <div class="day-card">
+                <div class="day-title">Push</div>
+                <div class="day-type">Chest, Shoulders, Triceps</div>
+                <ul class="exercise-list">
+                    <li class="exercise-item tooltip">Incline DB Bench
+                        <span class="tooltip-content">
+                            <div class="tooltip-title">Incline DB Bench</div>
+                            Set bench to 30-45°. Lie back with dumbbells at chest level. Press up and slightly together at the top. Lower slowly with control. Targets upper chest.
+                        </span>
+                    </li>
+                    <li class="exercise-item tooltip">Cable Lat Raise
+                        <span class="tooltip-content">
+                            <div class="tooltip-title">Cable Lat Raise</div>
+                            Stand sideways to cable machine. Grab handle with far hand. Raise arm out to side until parallel to ground. Control the descent. Builds shoulder width.
+                        </span>
+                    </li>
+                    <li class="exercise-item tooltip">Overhead Tricep Extensions
+                        <span class="tooltip-content">
+                            <div class="tooltip-title">Overhead Tricep Extensions</div>
+                            Hold dumbbell/cable overhead with both hands. Lower behind head by bending elbows. Extend arms back up. Keep elbows tight. Stretches triceps fully.
+                        </span>
+                    </li>
+                    <li class="exercise-item tooltip">Machine Chest Flies
+                        <span class="tooltip-content">
+                            <div class="tooltip-title">Machine Chest Flies</div>
+                            Sit with back flat against pad. Bring handles together in front of chest. Squeeze at the center. Control the stretch. Isolates chest muscles.
+                        </span>
+                    </li>
+                    <li class="exercise-item tooltip">Dumbbell Shoulder Press or Machine
+                        <span class="tooltip-content">
+                            <div class="tooltip-title">Shoulder Press</div>
+                            Press dumbbells or machine handles overhead from shoulder level. Fully extend arms at top. Lower with control. Builds overall shoulder strength.
+                        </span>
+                    </li>
+                    <li class="exercise-item tooltip">Cable Tricep Pushdowns
+                        <span class="tooltip-content">
+                            <div class="tooltip-title">Cable Tricep Pushdowns</div>
+                            Stand facing cable machine. Push bar/rope down until arms fully extended. Keep elbows stationary at sides. Slow return. Targets tricep definition.
+                        </span>
+                    </li>
+                </ul>
+                <div class="extra-section">
+                    <div class="extra-title">⚡ Finishers</div>
+                    <ul class="exercise-list">
+                        <li class="exercise-item tooltip">Bench Press
+                            <span class="tooltip-content">
+                                <div class="tooltip-title">Bench Press</div>
+                                Lie on flat bench. Lower bar to chest. Press up explosively. Keep feet planted. The king of chest exercises.
+                            </span>
+                        </li>
+                        <li class="exercise-item tooltip">Dips
+                            <span class="tooltip-content">
+                                <div class="tooltip-title">Dips</div>
+                                Support yourself on parallel bars. Lower body by bending arms. Press back up. Lean forward for chest, upright for triceps.
+                            </span>
+                        </li>
+                        <li class="exercise-item tooltip">Push-ups
+                            <span class="tooltip-content">
+                                <div class="tooltip-title">Push-ups</div>
+                                Start in plank position. Lower chest to ground. Push back up. Keep core tight. Classic bodyweight chest builder.
+                            </span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- PULL DAY -->
+            <div class="day-card">
+                <div class="day-title">Pull</div>
+                <div class="day-type">Back, Biceps</div>
+                <ul class="exercise-list">
+                    <li class="exercise-item tooltip">Seated Cable Rows
+                        <span class="tooltip-content">
+                            <div class="tooltip-title">Seated Cable Rows</div>
+                            Sit upright, pull handle to torso. Squeeze shoulder blades together. Keep chest up. Slowly extend arms back. Builds back thickness.
+                        </span>
+                    </li>
+                    <li class="exercise-item tooltip">Preacher Curls
+                        <span class="tooltip-content">
+                            <div class="tooltip-title">Preacher Curls</div>
+                            Rest arms on preacher bench pad. Curl weight up, squeezing biceps at top. Lower slowly with control. Isolates biceps peak.
+                        </span>
+                    </li>
+                    <li class="exercise-item tooltip">Lat Pulldowns
+                        <span class="tooltip-content">
+                            <div class="tooltip-title">Lat Pulldowns</div>
+                            Pull bar down to upper chest. Keep torso upright. Squeeze lats at bottom. Control the weight up. Builds back width.
+                        </span>
+                    </li>
+                    <li class="exercise-item tooltip">Cable Curls
+                        <span class="tooltip-content">
+                            <div class="tooltip-title">Cable Curls</div>
+                            Stand facing cable machine. Curl bar up while keeping elbows stationary. Squeeze at top. Constant tension on biceps.
+                        </span>
+                    </li>
+                    <li class="exercise-item tooltip">Chest Supported Row
+                        <span class="tooltip-content">
+                            <div class="tooltip-title">Chest Supported Row</div>
+                            Lie face down on incline bench. Pull dumbbells/handles to sides. Squeeze shoulder blades. Removes lower back strain.
+                        </span>
+                    </li>
+                </ul>
+                <div class="extra-section">
+                    <div class="extra-title">⚡ Finishers</div>
+                    <ul class="exercise-list">
+                        <li class="exercise-item tooltip">Pull-ups
+                            <span class="tooltip-content">
+                                <div class="tooltip-title">Pull-ups</div>
+                                Hang from bar, pull chin over bar. Lower with control. Use full range of motion. Ultimate back builder.
+                            </span>
+                        </li>
+                        <li class="exercise-item tooltip">DB Rows
+                            <span class="tooltip-content">
+                                <div class="tooltip-title">DB Rows</div>
+                                Bend over with hand on bench for support. Pull dumbbell to hip. Keep back flat. Squeeze at top. Unilateral back work.
+                            </span>
+                        </li>
+                        <li class="exercise-item tooltip">Hammer Curls w/ Rope
+                            <span class="tooltip-content">
+                                <div class="tooltip-title">Hammer Curls w/ Rope</div>
+                                Hold rope attachment with neutral grip. Curl up keeping palms facing each other. Targets brachialis and forearms.
+                            </span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- LEGS DAY -->
+            <div class="day-card">
+                <div class="day-title">Legs</div>
+                <div class="day-type">Quads, Hamstrings, Glutes</div>
+                <ul class="exercise-list">
+                    <li class="exercise-item tooltip">Seated Hamstring Curl
+                        <span class="tooltip-content">
+                            <div class="tooltip-title">Seated Hamstring Curl</div>
+                            Sit in machine, curl legs back. Squeeze hamstrings at contraction. Control the weight down. Isolates hamstring development.
+                        </span>
+                    </li>
+                    <li class="exercise-item tooltip">Back Squat
+                        <span class="tooltip-content">
+                            <div class="tooltip-title">Back Squat</div>
+                            Bar on upper back. Squat down until thighs parallel. Drive up through heels. Keep chest up. The king of leg exercises.
+                        </span>
+                    </li>
+                    <li class="exercise-item tooltip">Leg Extension
+                        <span class="tooltip-content">
+                            <div class="tooltip-title">Leg Extension</div>
+                            Sit in machine, extend legs until straight. Squeeze quads at top. Lower with control. Isolates quadriceps.
+                        </span>
+                    </li>
+                    <li class="exercise-item tooltip">Hip Abduction
+                        <span class="tooltip-content">
+                            <div class="tooltip-title">Hip Abduction</div>
+                            Sit in machine, push legs apart against resistance. Squeeze glutes at end. Control return. Targets outer glutes and hips.
+                        </span>
+                    </li>
+                    <li class="exercise-item tooltip">DB Romanian Deadlift
+                        <span class="tooltip-content">
+                            <div class="tooltip-title">DB Romanian Deadlift</div>
+                            Hold dumbbells, hinge at hips keeping back flat. Feel stretch in hamstrings. Drive hips forward to stand. Hamstring and glute builder.
+                        </span>
+                    </li>
+                </ul>
+                <div class="extra-section">
+                    <div class="extra-title">⚡ Finishers</div>
+                    <ul class="exercise-list">
+                        <li class="exercise-item tooltip">Bodyweight Squats
+                            <span class="tooltip-content">
+                                <div class="tooltip-title">Bodyweight Squats</div>
+                                Squat down keeping knees tracking over toes. Go as deep as comfortable. Stand back up. High rep leg endurance.
+                            </span>
+                        </li>
+                        <li class="exercise-item tooltip">Wall Sits
+                            <span class="tooltip-content">
+                                <div class="tooltip-title">Wall Sits</div>
+                                Back against wall, slide down to 90° knee bend. Hold position. Builds quad endurance and mental toughness.
+                            </span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <h1 style="font-size: 2.5rem; margin-top: 40px;">🔧 Maintenance</h1>
+        <p class="subtitle">Keep These Consistent</p>
+
+        <div class="maintenance-grid">
+            <!-- FOREARMS -->
+            <div class="maintenance-card">
+                <div class="maintenance-title">Forearms</div>
+                <ul class="exercise-list">
+                    <li class="exercise-item tooltip">Wrist Curls
+                        <span class="tooltip-content">
+                            <div class="tooltip-title">Wrist Curls</div>
+                            Rest forearms on bench, palms up. Curl wrists up and down with barbell/dumbbells. Builds forearm flexors.
+                        </span>
+                    </li>
+                    <li class="exercise-item tooltip">Grip Strength Trainer
+                        <span class="tooltip-content">
+                            <div class="tooltip-title">Grip Strength Trainer</div>
+                            Squeeze grip trainer for reps or time. Builds crushing grip strength and forearm endurance.
+                        </span>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- ABS -->
+            <div class="maintenance-card">
+                <div class="maintenance-title">Abs</div>
+                <ul class="exercise-list">
+                    <li class="exercise-item tooltip">Decline Crunches
+                        <span class="tooltip-content">
+                            <div class="tooltip-title">Decline Crunches</div>
+                            Lie on decline bench. Curl upper body up using abs. Focus on contraction. Control the descent. Increased resistance from angle.
+                        </span>
+                    </li>
+                    <li class="exercise-item tooltip">Weighted Crunches
+                        <span class="tooltip-content">
+                            <div class="tooltip-title">Weighted Crunches</div>
+                            Hold weight on chest. Crunch up focusing on abs. Squeeze at top. Builds ab thickness and strength.
+                        </span>
+                    </li>
+                    <li class="exercise-item tooltip">Heavy Leg Raises
+                        <span class="tooltip-content">
+                            <div class="tooltip-title">Heavy Leg Raises</div>
+                            Hang from bar or use bench. Raise legs to 90° or higher. Lower with control. Targets lower abs intensely.
+                        </span>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- CARDIO -->
+            <div class="maintenance-card">
+                <div class="maintenance-title">Cardio</div>
+                <ul class="exercise-list">
+                    <li class="exercise-item tooltip">Bike Rides
+                        <span class="tooltip-content">
+                            <div class="tooltip-title">Bike Rides</div>
+                            Steady state or interval cycling. Builds cardiovascular endurance. Low impact on joints. Great for active recovery.
+                        </span>
+                    </li>
+                    <li class="exercise-item tooltip">Sprints (100's)
+                        <span class="tooltip-content">
+                            <div class="tooltip-title">Sprints (100's)</div>
+                            Sprint 100 meters at max effort. Rest and repeat. Explosive cardio that builds speed and power while burning fat.
+                        </span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer">
+            <div class="footer-title">Made by Ammar Jeevunjee</div>
+            <div class="social-links">
+                <a href="https://instagram.com/free.aami" target="_blank" class="social-link">📸 Instagram @free.aami</a>
+                <a href="https://tiktok.com/@sexy.aami" target="_blank" class="social-link">🎵 TikTok @sexy.aami</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
